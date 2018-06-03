@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+        <script src="lookzoom.js"></script>
+    </head>
+    <body>
+        <a-scene lookzoom>
+            <a-assets>
+                <img id="map-tex" src="out.png" >
+            </a-assets>
+            <a-camera id="camera"></a-camera>
+            <a-entity id="map-surface" position="0 2 -5" rotation="0 0 0" geometry="primitive: plane; width: 16; height:9" 
+                material="shader: flat; src: #map-tex"></a-entity>
+        </a-scene>
+    </body>
+</html>
