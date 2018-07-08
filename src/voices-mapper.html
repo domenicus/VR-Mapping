@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <script src="voices-mapper.js"></script>
+        <style>
+            body {
+                margin: 0px;
+            }
+            canvas {
+                width: 100%;
+                height: calc(100% - 3em);
+            }
+            div.toolbar{
+                width: 100%;
+                height: 3em;
+                background-color: #CCCCCC;
+            }
+            div.toolbar span {
+                background-color:#FFFFFF;
+                margin:0.5em;
+                padding: 0.5em;
+            }
+            #mapperImage{
+                display: none;
+            }
+            div#mapperImageUploadBox {
+                position: relative;
+                width: fit-content;
+                top: 50%;
+                left: 20%;
+                z-index: 90;
+                background-color:#CCC;
+                height: fit-content;
+            }
+            div#mapperImageUploadBox span{
+                margin: 1em;
+                padding: 0.5em;
+                display: inline-block;
+                background: #FFF;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="out.png" id="mapperImage" />
+        <div class="toolbar" >
+            <span>
+                Select ID number:
+                <select id="mapperIdBox">
+                </select>
+                Set sound file:
+                <input id="mapperFileUpload" type="file" accept="audio/*"/>
+                <a id="mapperFileDownload">
+                    <button>
+                            Download mapper file
+                    </button>
+                </a>
+            </span>
+        </div>
+        <div id="mapperImageUploadBox">
+            <span>
+                Upload a image of a map:
+                <input id="mapperImageUpload" type="file" accept="image/*" />
+            </span>
+        </div>
+        <canvas id="mapperCanvas" />
+    </body>
+</html>

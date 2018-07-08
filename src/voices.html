@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+        <script src="voices.js"></script>
+    </head>
+    <body>
+        <span style="position:relative;z-index:9999;background-color:#FFF;padding:1em;">
+            Select mapper file to load:
+            <input type="file" id="mapFileLoad" />
+        </span>
+        <a-scene>
+            <a-assets>
+                <img id="map-tex" src="out.png" >
+            </a-assets>
+            <a-camera>
+                <a-entity voices>
+                    <a-entity raycaster="showLine" />
+                </a-entity>
+            </a-camera>
+            <a-entity id="map-surface" position="0 2 -5" rotation="0 0 0" geometry="primitive: plane; width: 16; height:9" 
+                material="shader: flat; src: #map-tex"></a-entity>
+        </a-scene>
+    </body>
+</html>
