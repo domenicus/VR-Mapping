@@ -72,6 +72,11 @@ function voices_mapper() {
                 ctx.font = "20px Arial";
                 ctx.fillStyle = "#000000";
                 ctx.fillText(i, uv_x_to_screen(area.x)+2, uv_y_to_screen(area.y)+20);
+                if(area.filename) {
+                    ctx.font = "12px Arial";
+                    ctx.fillText(area.filename,
+                            uv_x_to_screen(area.x)+2, uv_y_to_screen(area.y)+30);
+                }
         }
     };
     rescale();
@@ -91,9 +96,11 @@ function voices_mapper() {
                 this.oldx = x;
                 this.oldy = y;
                 this.active = true;
+                this.moved = false;
                 break;
             case 1:
                 if(this.active) {
+                    this.moved = true;
                     redraw();
                     ctx.beginPath();
                     ctx.fillStyle = "rgba(100, 240, 155, 0.3)";
@@ -105,22 +112,26 @@ function voices_mapper() {
                 break;
             case 2:
                 this.active = false;
+                // Ignore clicks without a drag -- probably a mistake click.
+                if(!moved)return;
                 var temp ={x:this.oldx, y:this.oldy,lx:x,ly:y, file:null}; 
                 var swap;
                 if(temp.x > temp.lx) {
                     swap = temp.lx;
                     temp.lx = temp.x;
                     temp.x = swap;
+                }
                 if(temp.y > temp.ly) {
                     swap = temp.ly;
                     temp.ly = temp.y;
                     temp.y = swap;
                 }
-                }
                 act_list.push(temp);
                 var opt = document.createElement("option");
                 opt.appendChild(document.createTextNode(act_list.length-1));
                 select_box.appendChild(opt);
+                select_box.selectedIndex = act_list.length-1;
+                file_upload.value=null;
                 redraw();
                 break;
             default:
@@ -144,6 +155,8 @@ function voices_mapper() {
         file_reader.onload = function(e) {
             // save the resulting huge dataURL
             act_list[select_box.selectedIndex].file = e.target.result;
+            act_list[select_box.selectedIndex].filename = upfile.name;
+            redraw();
             // also play it:
             file_reader.readAsArrayBuffer(upfile);
             file_reader.onload = function(e) {
@@ -167,7 +180,6 @@ function voices_mapper() {
             new Blob([JSON.stringify({list:act_list,image:outer.image_url})], 
                 { type:"application/octet-stream" }));
         file_download.setAttribute("download", "data.mapped");
-        file_download.click();
     });
 }
 };
