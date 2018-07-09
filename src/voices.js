@@ -18,9 +18,16 @@ AFRAME.registerComponent("voices", {
                 reader.onload = function(e) {
                     outer.totalloaded = true;
                     outer.parsed = JSON.parse(e.target.result);
-                    console.log(outer.parsed);
                     document.querySelector("#map-surface").
                         setAttribute("material", "src", "url("+outer.parsed.image+")");
+                    var img = document.querySelector("#map-tex");
+		    img.setAttribute("src", outer.parsed.image);
+		    img.onload = function() {
+			    document.querySelector("#map-surface").
+				setAttribute("geometry", "width", "16");
+			    document.querySelector("#map-surface").
+				setAttribute("geometry", "height", 16*img.naturalHeight/img.naturalWidth);
+		    }
                     outer.parsed = outer.parsed.list;
                 }
                 reader.readAsText(file);
