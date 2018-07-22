@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+        <script src="planetarium.js"></script>
+    </head>
+    <body>
+        <a-scene>
+            <a-assets timeout="10000">
+                <img id="map-1" src="photos/out.png" />
+                <img id="map-2" src="photos/Fritz-1707.jpg" />
+                <img id="map-3" src="photos/Mappa Geographica exhibens Provincias1751.jpg" />
+                <img id="map-4" src="photos/S. Giacopo Capitale del Regno del Chile1777.jpg" />
+                <img id="backgroundInsideHouse" src="photos/6808211120_5f71dd38ba_o.jpg">
+            </a-assets>
+            <a-entity planetarium="images: map-1, map-2, map-3, map-4, map-1, map-2, map-3, map-4">
+            </a-entity>
+            <a-camera>
+            </a-camera>
+            <a-sky id="background-img" src="#backgroundInsideHouse"></a-sky>
+        </a-scene>
+    </body>
+</html>
