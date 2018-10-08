@@ -1,0 +1,5 @@
+**/*
+!.gitignore
+
+# Place .mapped files in here
+# they will not be uploaded to the repository
