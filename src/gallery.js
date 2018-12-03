@@ -3,6 +3,7 @@ AFRAME.registerComponent("gallery", { schema: {
 		exhibits: {type: "array"},
 		console: {type: "model", default:null}
 	},
+	camera: null,
 	init: function() {
 		console.log(this);
 		var fileloader = document.querySelector("a-assets").fileLoader;
@@ -10,14 +11,15 @@ AFRAME.registerComponent("gallery", { schema: {
 		var raycastId = "raycast-voices-demo";
 		var raycaster = document.createElement("a-entity");
 		raycaster.setAttribute("raycaster", "showline"); 
+		raycaster.setAttribute("raycaster", "origin", "0, 0, 0"); //Is required despite docs
 		raycaster.setAttribute("raycaster", "objects", "[voices-lib]");
 		raycaster.id = raycastId;
 		// Create laser controls
 		console.log(document.querySelector("[laser-controls]"));
 		var pointers = [document.createElement("a-entity"), 
 			document.createElement("a-entity")];
-		pointers[0].setAttribute("laser-controls", "hand", "right");
-		pointers[1].setAttribute("laser-controls", "hand", "left");
+		pointers[0].setAttribute("hand-controls", "right");
+		pointers[1].setAttribute("hand-controls", "left");
 		pointers[0].setAttribute("raycaster", "recursive", "true");
 		pointers[1].setAttribute("raycaster", "recursive", "true");
 		pointers[0].setAttribute("line", "color", "blue");
@@ -29,15 +31,8 @@ AFRAME.registerComponent("gallery", { schema: {
 		var outerElts = this.data.elts;
 		var outer = this;
 		this.data.currPos = 0;
-		var controllerModel = document.createElement("a-box");
-		controllerModel.setAttribute("color", "blue");
-		controllerModel.setAttribute("width", "0.1");
-		controllerModel.setAttribute("depth", "0.3");
-		controllerModel.setAttribute("height", "0.1");
-		pointers[0].appendChild(controllerModel);
-		this.el.sceneEl.appendChild(pointers[0]);
 		for(var i in pointers) {
-			//this.el.sceneEl.appendChild(pointers[i]);
+			this.el.sceneEl.appendChild(pointers[i]);
 			pointers[i].addEventListener("mousedown", function(e) {
 				if(outer.data.go < 1)
 					return; // no interactions while moving
@@ -114,12 +109,18 @@ AFRAME.registerComponent("gallery", { schema: {
 					
 			});
 		}
-		var camera = document.createElement("a-camera");
+		var camera = document.querySelector("[camera]");
+		if(!camera) {
+			camera = document.createElement("a-camera");
+			this.el.sceneEl.appendChild(camera);
+		}
+		this.camera = camera;
 		camera.setAttribute("look-controls");
 		camera.setAttribute("wasd-controls");
 		camera.appendChild(raycaster);
+		//camera.appendChild(pointers[0]);
 		camera.id = "camera-gallery";
-		this.el.sceneEl.appendChild(camera);
+		camera.setAttribute("active", true);
 		this.data.exhibits.forEach(function(url, i) {
 			var elt = document.createElement("a-entity");
 			fileloader.load(url, function(mapped) {
@@ -154,6 +155,10 @@ AFRAME.registerComponent("gallery", { schema: {
 		out.z = start.z*im + fin.z*m;
 	},
 	tick: function tick() {
+		if(this.camera) {
+			this.camera.setAttribute("active", true);
+			this.camera = null;
+		}
 		if((this.data.go < 1)) {
 			var data = this.data;
 			var te = {x:0, y:0, z:0};
