@@ -10,17 +10,25 @@
     <body>
         <a-scene>
             <a-assets>
+                <a-asset-item id="a" src="temp/test.mapped"></a-asset-item>
+                <a-asset-item id="b" src="temp/hereford.mapped"></a-asset-item>
+                <a-asset-item id="c" src="temp/Drake.mapped"></a-asset-item>
             </a-assets>
-            <a-entity position="-30, 0, 0" intro-room></a-entity>
-            <a-entity gallery="exhibits: temp/test.mapped, temp/hereford.mapped, temp/Drake.mapped, temp/new.mapped, temp/southpole.mapped">
+            <a-entity intro-room="replacewith: #realroom"></a-entity>
+            <a-entity id="realroom" position="-30 0 0">
+                <a-entity gallery="exhibits: #a, #b, #c">
+                </a-entity>
+                <a-entity obj-model="obj: url(temp/room.obj)" rotation="0 180 0" position="0 0 5" material="shader: standard"></a-entity>
+                <!--
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="2 5.5 0" intensity="0.5"></a-light>
+                -->
+                <a-text class="clickable" id="nextbutton" position="-5 0 4" rotation="0 90 0" value="Next Map" geometry="primitive: plane"></a-text>
+                <a-text class="clickable" id="previousbutton" position="-5 0 2" rotation="0 90 0" value="Previous Map" geometry="primitive: plane"></a-text>
             </a-entity>
-            <a-entity obj-model="obj: url(temp/room.obj)" rotation="0 180 0" position="0 0 5" material="shader: standard"></a-entity>
-            <!--
-            <a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
-            <a-light color=#faebd7 type="point" distance=20 decay=0 position="2 5.5 0" intensity="0.5"></a-light>
-            -->
-            <a-text id="nextbutton" position="-5 0 4" rotation="0 90 0" value="Next Map" geometry="primitive: plane"></a-text>
-            <a-text id="previousbutton" position="-5 0 2" rotation="0 90 0" value="Previous Map" geometry="primitive: plane"></a-text>
+
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #118A7E"></a-entity>
         </a-scene>
     </body>
 </html>

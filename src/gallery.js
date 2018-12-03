@@ -15,15 +15,8 @@ AFRAME.registerComponent("gallery", { schema: {
 		raycaster.setAttribute("raycaster", "objects", "[voices-lib]");
 		raycaster.id = raycastId;
 		// Create laser controls
-		console.log(document.querySelector("[laser-controls]"));
-		var pointers = [document.createElement("a-entity"), 
-			document.createElement("a-entity")];
-		pointers[0].setAttribute("hand-controls", "right");
-		pointers[1].setAttribute("hand-controls", "left");
-		pointers[0].setAttribute("raycaster", "recursive", "true");
-		pointers[1].setAttribute("raycaster", "recursive", "true");
-		pointers[0].setAttribute("line", "color", "blue");
-		pointers[1].setAttribute("line", "color", "green");
+		var pointers = document.querySelectorAll("[laser-controls]");
+		console.log("pointers", pointers);
 		this.data.pointers = pointers;
 		var next = document.querySelector("#nextbutton");
 		var back = document.querySelector("#previousbutton");
@@ -32,7 +25,10 @@ AFRAME.registerComponent("gallery", { schema: {
 		var outer = this;
 		this.data.currPos = 0;
 		for(var i in pointers) {
-			this.el.sceneEl.appendChild(pointers[i]);
+			if(!pointers[i].addEventListener) {
+				delete pointers[i];
+				continue;
+			}
 			pointers[i].addEventListener("mousedown", function(e) {
 				if(outer.data.go < 1)
 					return; // no interactions while moving
@@ -41,8 +37,8 @@ AFRAME.registerComponent("gallery", { schema: {
 				outer.data.start = {x:0, y:0, z:0};
 				outer.data.end = {x:0, y:0, z:0};
 				outer.data.end.x +=
-					(hit==next)?-20:
-					((hit==back)?20:
+					(hit==next)?-40:
+					((hit==back)?40:
 					 0);
 				if(hit==back)
 					outer.data.currPos --;
@@ -61,7 +57,7 @@ AFRAME.registerComponent("gallery", { schema: {
 					if(outerElts[j].data.menuelt == hit) {
 						outer.data.go = 0;
 						outer.data.start = {x:0, y:0, z:0};
-						outer.data.end= {x:20*(-outer.data.currPos+j), y:0, z:0};
+						outer.data.end= {x:40*(-outer.data.currPos+j), y:0, z:0};
 						outer.data.currPos = j;
 						for(var j in outerElts) {
 							if(!(outerElts[j].data))
@@ -118,23 +114,34 @@ AFRAME.registerComponent("gallery", { schema: {
 		camera.setAttribute("look-controls");
 		camera.setAttribute("wasd-controls");
 		camera.appendChild(raycaster);
-		//camera.appendChild(pointers[0]);
 		camera.id = "camera-gallery";
 		camera.setAttribute("active", true);
 		this.data.exhibits.forEach(function(url, i) {
+
+			var mapped = document.querySelector(url).data;
 			var elt = document.createElement("a-entity");
-			fileloader.load(url, function(mapped) {
-				elt.setAttribute("voices-lib", "mapped", mapped);
-				elt.setAttribute("voices-lib", "raycaster", "#"+raycastId);
-				elt.setAttribute("position", 20*i+" 0 0");
-				outerEl.appendChild(elt);
-				outerElts.push(elt);
-			});
+			elt.setAttribute("voices-lib", "mapped", mapped);
+			elt.setAttribute("voices-lib", "raycaster", "#"+raycastId);
+			elt.setAttribute("position", 40*i+" 0 0");
+			outerEl.appendChild(elt);
+			outerElts.push(elt);
+
 			// Create a menu item:
-			var menu = document.createElement("a-text");
-			menu.setAttribute("value", url.split("/").pop().split(".")[0]);
+			var menu = document.createElement("a-entity");
+			elt.components["voices-lib"].onloadmeta(function(e) {
+				var meta = e.detail.meta;
+				console.log("GETTING META");
+				if(meta) {
+					menu.setAttribute("text", "value", meta.displayTitle);
+				} else {
+					menu.setAttribute("text", "value", url.split("/").pop().split(".")[0]);
+				}
+			});
+			menu.setAttribute("text", "wrapCount", 15);
 			menu.setAttribute("geometry", "primitive", "plane");
-			menu.setAttribute("position", (i*1.5-3)+" 2 5");
+			menu.setAttribute("geometry", "width", 2);
+			menu.setAttribute("geometry", "height", "auto");
+			menu.setAttribute("position", (i*2.5-5)+" 2 5");
 			menu.setAttribute("rotation", "0 180 0");
 			outerEl.sceneEl.appendChild(menu);
 			elt.data={};

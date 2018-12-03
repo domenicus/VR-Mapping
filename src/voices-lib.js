@@ -10,6 +10,7 @@ AFRAME.registerComponent("voices-lib", {
 	playing_id: -1,
 	init: function() {
 	/* Setup call. */
+		console.log("INITTING");
 		this.parsed = JSON.parse(this.data.mapped);
 		var parsed = this.parsed;
 		var outer = this;
@@ -18,6 +19,7 @@ AFRAME.registerComponent("voices-lib", {
 		map_surface.setAttribute("position", "0, 2, -5", );
 		map_surface.setAttribute("material", "src", "url("+parsed.image+")");
 		map_surface.setAttribute("material", "shader", "flat");
+		map_surface.classList.add("clickable");
 		var img = document.createElement("img");
 		document.querySelector("a-assets").appendChild(img);
 		img.setAttribute("src", parsed.image);
@@ -27,7 +29,27 @@ AFRAME.registerComponent("voices-lib", {
 			outer.el.appendChild(map_surface);
 			outer.totalloaded = true;
 		}
+		// metadata pane:
+		if(parsed.meta) {
+			var desc = parsed.meta.displayTitle + "\n"+
+				parsed.meta.source_publisher + "\n"+
+				parsed.meta.source_date + "\n"+
+				parsed.meta.id + "\n"+
+				parsed.meta.technique;
+			var pane = document.createElement("a-entity");
+			pane.setAttribute("geometry", "primitive", "plane");
+			pane.setAttribute("geometry", "height", "auto");
+			pane.setAttribute("geometry", "width", "auto");
+			pane.setAttribute("text", "width", 6);
+			pane.setAttribute("text", "value", desc);
+			pane.setAttribute("position", "-11, 0, 0");
+			pane.setAttribute("material", "color", "darkblue");
+			map_surface.appendChild(pane);
+		}
+		this.meta = parsed.meta;
 		this.parsed = parsed.list;
+
+		this.onloadmetaf({detail: {meta: parsed.meta}});
 	},
 	tick: function() {
 		if(!this.totalloaded)return;
@@ -54,6 +76,9 @@ AFRAME.registerComponent("voices-lib", {
 				break;
 			}
 		}
+	},
+	onloadmeta: function(f) {
+		this.onloadmetaf = f;
 	}
 });
 

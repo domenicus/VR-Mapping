@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <!--<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>-->
+<!--
+        <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+-->
+        <script src="aframe-local-dev.js"></script>
+        <script src="portal-lib.js"></script>
+        <script src="intro-room.js"></script>
+        <script src="testroom.js"></script>
+    </head>
+    <body>
+        <a-scene>
+            <a-assets>
+                <a-asset-item id="roommodel" src="temp/room.obj"></a-asset>
+            </a-assets>
+            </a-entity>
+            <a-entity position="-30 0 0" id="realroom">
+                <a-obj-model src="#roommodel" rotation="0 180 0" position="0 0 5" material="shader: standard" testroom>
+                </a-entity>
+                <!--
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="2 5.5 0" intensity="0.5"></a-light>
+                -->
+                <a-text id="nextbutton" position="-5 0 4" rotation="0 90 0" value="Hello World" geometry="primitive: plane"></a-text>
+                <a-text id="previousbutton" position="-5 0 2" rotation="0 90 0" value="2nd Signifier" geometry="primitive: plane"></a-text>
+            </a-entity>
+<!--
+-->
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #118A7E"></a-entity>
+
+            <!-- Must be last? -->
+            <a-entity intro-room="replacewith: #realroom"></a-entity>
+        </a-scene>
+    </body>
+</html>
