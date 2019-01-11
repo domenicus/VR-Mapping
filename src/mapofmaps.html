@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+        <!--<script src="aframe-local-dev.js"></script>-->
+        <script src="mapofmaps.js"></script>
+    </head>
+    <body>
+        <a-scene>
+		<a-entity mapofmaps></a-entity>
+		<a-plane position="-5 0 0" class="lmap clickable" material="color: red"></a-plane>
+		<a-plane position="-5 1 0" class="lmap clickable" material="color: blue"></a-plane>
+		<a-plane position="-5 1 1" class="lmap clickable" material="color: green"></a-plane>
+		<a-plane position="-5 0 1" class="lmap clickable" material="color: yellow"></a-plane>
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #118A7E"></a-entity>
+        </a-scene>
+    </body>
+</html>
