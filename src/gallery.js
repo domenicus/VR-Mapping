@@ -6,7 +6,7 @@ AFRAME.registerComponent("gallery", { schema: {
 	camera: null,
 	init: function() {
 		console.log(this);
-		var fileloader = document.querySelector("a-assets").fileLoader;
+		//var fileloader = document.querySelector("a-assets").fileLoader;
 		var outerEl = this.el;
 		var raycastId = "raycast-voices-demo";
 		var raycaster = document.createElement("a-entity");
@@ -69,37 +69,6 @@ AFRAME.registerComponent("gallery", { schema: {
 						return;
 					}
 				}
-				console.log(e);
-				console.log(hit);
-				console.log(hit.parentEl.id);
-				// if we didn't already hit a menu or whatever..
-				// check to see if we hit a map
-				for(var j in outerElts) {
-					console.log(outerElts[j].id);
-					if(hit.parentEl.id == outerElts[j].id) {
-						console.log("picked!");
-						if(!hit.parentEl.data.zoomed) {
-							console.log("not zoomed");
-							hit.setAttribute("scale", {x:2, y:2, z:2});
-							var uv = e.detail.intersection.uv;
-							var dim = hit.components.geometry.oldData;
-							var position = hit.components.position.data;
-							outerElts[j].data.oldposition = position;
-							console.log(position, uv, dim);
-							position = {x:position.x, y:position.y, z:position.z};
-							position.x -= 2*(uv.x-0.5)*dim.width;
-							position.y -= 2*(uv.y-0.5)*dim.height;
-							hit.setAttribute("position", position);
-							hit.parentEl.data.zoomed = true;
-						} else
-						if(hit.parentEl.data.zoomed) {
-							console.log("zoomed");
-							hit.setAttribute("scale", {x:1, y:1, z:1});
-							hit.parentEl.data.zoomed = false;
-							hit.setAttribute("position", outerElts[j].data.oldposition);
-						}
-					}
-				}
 				console.log("---");
 				// Guess it hit the room or something.
 					
@@ -116,38 +85,6 @@ AFRAME.registerComponent("gallery", { schema: {
 		camera.appendChild(raycaster);
 		camera.id = "camera-gallery";
 		camera.setAttribute("active", true);
-		this.data.exhibits.forEach(function(url, i) {
-
-			var mapped = document.querySelector(url).data;
-			var elt = document.createElement("a-entity");
-			elt.setAttribute("voices-lib", "mapped", mapped);
-			elt.setAttribute("voices-lib", "raycaster", "#"+raycastId);
-			elt.setAttribute("position", 40*i+" 0 0");
-			outerEl.appendChild(elt);
-			outerElts.push(elt);
-
-			// Create a menu item:
-			var menu = document.createElement("a-entity");
-			elt.components["voices-lib"].onloadmeta(function(e) {
-				var meta = e.detail.meta;
-				console.log("GETTING META");
-				if(meta) {
-					menu.setAttribute("text", "value", meta.displayTitle);
-				} else {
-					menu.setAttribute("text", "value", url.split("/").pop().split(".")[0]);
-				}
-			});
-			menu.setAttribute("text", "wrapCount", 15);
-			menu.setAttribute("geometry", "primitive", "plane");
-			menu.setAttribute("geometry", "width", 2);
-			menu.setAttribute("geometry", "height", "auto");
-			menu.setAttribute("position", (i*2.5-5)+" 2 5");
-			menu.setAttribute("rotation", "0 180 0");
-			outerEl.sceneEl.appendChild(menu);
-			elt.data={};
-			elt.data.menuelt = menu;
-			elt.id = "gallery-item-"+i;
-		});
 
 	},
 	logisticinterp: function logisticinterp(t, start, fin, out) {

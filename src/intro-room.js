@@ -16,11 +16,8 @@ AFRAME.registerComponent("intro-room", {
 		var el = this.el;
 		var self = this;
 		// create intro room programatically:
-		var room = document.createElement("a-collada-model");
-		//room.setAttribute("src", "introroom.dae");
-		room.setAttribute("src", "temp/domingo.dae")
-		room.setAttribute("scale", "0.8, 0.8, 0.8")
-		room.setAttribute("rotation", "0 -90 0")
+		var room = document.createElement("a-sky");
+		room.setAttribute("src", "temp/PIA15482.jpg");
 		room.setAttribute("position", "0 -2 0");
 		var cam = document.querySelector("[camera]");
 		if(!cam) {
@@ -33,6 +30,10 @@ AFRAME.registerComponent("intro-room", {
 		greeting.setAttribute("color", "black");
 		greeting.setAttribute("position", "-2.8 2.8 -4.5");
 		greeting.setAttribute("scale", "2, 2, 2");
+		greeting.setAttribute("geometry", "primitive", "plane");
+		greeting.setAttribute("geometry", "width", "auto");
+		greeting.setAttribute("geometry", "height", "auto");
+		greeting.setAttribute("material", "color", "white");
 
 		var portal = document.createElement("a-entity");
 		this.portal = portal;
