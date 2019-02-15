@@ -1,9 +1,12 @@
 "use strict";
 AFRAME.registerComponent("mapofmaps", {
 	zones: null,
-	selected: false,
+	selected: false, // 0 = selecting, 1 = portal
+	zoomed: false,
+	schema: {target: {type: 'selector'}},
 	init: function initMapOfMaps() {
 		var el = this.el;
+		var target = this.data.target;
 		var self = this;
 		console.log(el);
 		el.addEventListener('click', function(e) {
@@ -21,11 +24,21 @@ AFRAME.registerComponent("mapofmaps", {
 					if(coords[0] < isect.x && coords[2] > isect.x &&
 						coords[1] < isect.y && coords[3] > isect.y) {
 						console.log(zones[i].name);
-						el.setAttribute("src", "temp/flipped."+zones[i].name);
+						target.setAttribute("src", "temp/flipped."+zones[i].name);
 						self.data.selected = true;
 					}
 				}
 			}
+		});
+		target.addEventListener('click', function(e) {
+			if(self.zoomed) {
+				target.object3D.position.copy(self.zoomed);
+				self.zoomed = false;
+				return;
+			}
+			self.zoomed = target.object3D.position.clone();
+			var s = e.detail.intersection.point.divideScalar(-3/2);
+			target.object3D.position.add(s);
 		});
 		fetch("temp/out.json")
 			.then(response => response.json())

@@ -5,7 +5,7 @@ import math
 from PIL import Image
 import PIL
 
-image_names = ["7962e.jpg", "14349-000.jpg", "32175.jpg"];
+image_names = ["7962e.jpg", "14349-000.jpg", "32175.jpg", "Ovalle-final_012.jpg"];
 images = [];
 
 for name in image_names:
@@ -31,7 +31,6 @@ for lng in range(0,8191):
         i += 1
     if i >= len(images):
         break
-    print(i)
     c_height = images[i].size[1]
     c_diff = int((4096-c_height)/2)
     imslice = images[i].crop(box=(int(x), 0, int(x+incr_x), c_height))

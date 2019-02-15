@@ -25,15 +25,18 @@ AFRAME.registerComponent("intro-room", {
 			cam.setAttribute("camera", "active", true);
 		}
 		this.camera = cam;
-		var greeting = document.createElement("a-text");
-		greeting.setAttribute("value", this.greeting);
-		greeting.setAttribute("color", "black");
-		greeting.setAttribute("position", "-2.8 2.8 -4.5");
-		greeting.setAttribute("scale", "2, 2, 2");
-		greeting.setAttribute("geometry", "primitive", "plane");
-		greeting.setAttribute("geometry", "width", "auto");
-		greeting.setAttribute("geometry", "height", "auto");
-		greeting.setAttribute("material", "color", "white");
+		var greeting = document.createElement("p");
+		greeting.innerHTML = (this.greeting);
+		greeting.style.width = "25vw";
+		greeting.style.zIndex = 999;
+		greeting.style.position = "relative";
+		greeting.style.left = "5em";
+		greeting.style.background = "white";
+		greeting.style.padding = "2em";
+
+		setTimeout(function() {
+			document.querySelector('.a-enter-vr').appendChild(greeting);
+		}, 1000);
 
 		var portal = document.createElement("a-entity");
 		this.portal = portal;
@@ -51,7 +54,6 @@ AFRAME.registerComponent("intro-room", {
 		this.el.appendChild(portal);
 		this.el.appendChild(room);
 		this.el.sceneEl.appendChild(cam);
-		this.el.appendChild(greeting);
 	},
 	tick: function intro_room_tick() {
 		if(!this.lazyInit) {
