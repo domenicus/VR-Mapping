@@ -36,8 +36,8 @@
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .doesntexist; showLine: false">
                 <a-entity position="0 0 -0.4">
                     <a-sphere mapofmaps="target: #outermap" id="mapworld" src="#mapofmaps" radius="0.185"
-                            theta-start="0" theta-length="180" class="clickable" material="side: back"></a-sphere>
-                    <a-entity obj-model="obj: url(temp/compass.obj)" scale="0.25, 0.25, 0.25" ></a-entity>
+                            theta-start="0" theta-length="180" class="clickable" material="side: back; shader: flat"></a-sphere>
+                    <a-entity obj-model="obj: url(temp/compass.obj)" scale="0.15, 0.15, 0.15" position="0 -0.15 0"></a-entity>
                 </a-entity>
             </a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #FF8A7E"></a-entity>
