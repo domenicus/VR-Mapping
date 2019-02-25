@@ -21,23 +21,29 @@
             <a-entity id="realroom" position="-6000 0 0">
                 <a-entity gallery="exhibits: #a, #b, #c">
                 </a-entity>
-                <a-entity obj-model="obj: url(temp/platform.obj)" rotation="0 180 0" position="0 -2 0" material="shader: standard" scale="0.66"></a-entity>
+                <a-entity obj-model="obj: url(temp/platform.obj)" rotation="0 180 0" position="0 -2 0" material="shader: standard" scale="0.66 0.66 0.66"></a-entity>
                     <!--
                 <a-text class="clickable" id="nextbutton" position="-5 0 4" rotation="0 90 0" value="Next Map" geometry="primitive: plane"></a-text>
                 <a-text class="clickable" id="previousbutton" position="-5 0 2" rotation="0 90 0" value="Previous Map" geometry="primitive: plane"></a-text>
                     -->
                 <a-sphere id="outermap" src="#mapofmaps" radius="10"
-                        theta-start="20" theta-length="120" material="side: back" class="clickable">
-                    <a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
-                    <a-light color=#faebd7 type="point" distance=20 decay=0 position="2 5.5 0" intensity="0.5"></a-light>
+                        theta-start="20" theta-length="120" material="side: back; shader: flat" class="clickable">
                 </a-sphere>
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
+                <a-light color=#faebd7 type="point" distance=20 decay=0 position="2 5.5 0" intensity="0.5"></a-light>
             </a-entity>
 
-            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .doesntexist" line="color: rgba(0, 0, 0, 0)">
-                <a-sphere mapofmaps="target: #outermap" id="mapworld" src="#mapofmaps" radius="0.2"
-                        theta-start="0" theta-length="180" class="clickable"></a-sphere>
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .doesntexist; showLine: false">
+                <a-entity position="0 0 -0.4">
+                    <a-sphere mapofmaps="target: #outermap" id="mapworld" src="#mapofmaps" radius="0.185"
+                            theta-start="0" theta-length="180" class="clickable" material="side: back"></a-sphere>
+                    <a-entity obj-model="obj: url(temp/compass.obj)" scale="0.25, 0.25, 0.25" ></a-entity>
+                </a-entity>
             </a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #FF8A7E"></a-entity>
+            <a-entity camera="active: true" look-controls wasd-controls position="0 1.6 0">
+                <a-camera spectator="true"></a-camera>
+            </a-entity>
         </a-scene>
     </body>
 </html>
