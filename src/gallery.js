@@ -6,7 +6,7 @@ AFRAME.registerComponent("gallery", { schema: {
 		navtools: {type: "selectorAll"}
 	},
 	toolState: 0, //0=no tool, 1=have tool, 2=is portal
-	activeTool: null,
+	activetool: null,
 	zones: null,
 	currentRoom: null,
 	roomvector: new THREE.Vector3(0, 0, 15),
@@ -40,10 +40,16 @@ AFRAME.registerComponent("gallery", { schema: {
 
 		// REGISTER MAP TOOL LISTENERS
 		function teleportHandler(newroom, e) {
+			// delete old portal:
+			e.target.parentNode.removeChild(e.target);
 			console.log("current room index:", self.currentRoom);
 			self.makeRoom(self.currentRoom)[0].setAttribute("position", e.detail.to);
 			self.makeRoom(newroom)[0].setAttribute("position", new THREE.Vector3());
 			self.currentRoom = newroom;
+			console.log(self.activetool);
+			self.el.sceneEl.appendChild(self.activetool);
+			self.activetool = null;
+			self.toolState = 0;
 		}
 		for(var i = 0; i < data.navtools.length; i++) {
 			var tool = data.navtools[i];
@@ -58,6 +64,8 @@ AFRAME.registerComponent("gallery", { schema: {
 						cursor.appendChild(tool);
 					}
 					self.toolState = 1;
+					self.activetool = tool;
+					console.log("active tool:", self.activetool);
 					console.log("Picked up");
 					return;
 				}
