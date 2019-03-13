@@ -12,13 +12,14 @@
 	<a-scene>
 		<a-assets timeout=100000>
 			<img id="mapofmaps" src="temp/out.jpg"></img>
+			<img id="space" src="temp/PIA15482.jpg"></img>
 			<a-asset-item id="metafile" src="temp/out.json"></a-asset-item>
 		</a-assets>
 		<a-entity gallery="metafile: #metafile; mapfile:#mapofmaps; navtools: #mapworld; exhibits: a, b, c;"/>
 		</a-entity>
 		<a-entity id="nexus" position="0 0 0">
 			<a-entity obj-model="obj: url(temp/platform.obj)" rotation="0 180 0" position="0 -2 0" material="shader: standard" scale="0.66 0.66 0.66"></a-entity>
-			<a-sphere id="outermap" src="#mapofmaps" radius="10"
+			<a-sphere id="outermap" src="#space" radius="10"
 			theta-start="20" theta-length="120" material="side: back; shader: flat" class="clickable">
 			</a-sphere>
 			<!--
