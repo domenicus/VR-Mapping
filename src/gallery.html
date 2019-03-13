@@ -31,21 +31,25 @@
 			<a-sphere position="0 0 -0.4" id="mapworld" src="#mapofmaps" radius="0.185"
 			theta-start="0" theta-length="180" class="clickable" material="side: back; shader: flat">
 				<a-entity obj-model="obj: url(temp/compass.obj)" scale="0.15, 0.15, 0.15" position="0 -0.15 0"></a-entity>
+			<!--
+			-->
 			</a-sphere>
 		</a-entity>
 		<a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #FF8A7E"></a-entity>
-		<a-camera active="true" look-controls wasd-controls>
-			<!-- FOR DEBUGGING
-			-->
-			<a-entity cursor="fuse: true; fuseTimeout: 1500" position="0 0 -1"
-			geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-			material="color: black; shader: flat"
-			animation__click="property:scale;startEvents:click;easing:easeInCubic;dur:150;from: 0.1 0.1 0.1; to: 1 1 1"
-			animation__fusing="property:scale; startEvents:fusing;easing:easeInCubic;dur:1500;from: 1 1 1; to: 0.1 0.1 0.1"
-			animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1"
-			>
-			</a-entity>
-		</a-camera>
+        <a-entity position="0 1.6 0">
+            <a-entity camera="active:true;" look-controls wasd-controls>
+                <!-- FOR DEBUGGING
+                -->
+                <a-entity cursor="fuse: true; fuseTimeout: 1500" position="0 0 -0.1"
+                geometry="primitive: ring; radiusInner: 0.003; radiusOuter: 0.005"
+                material="color: black; shader: flat"
+                animation__click="property:scale;startEvents:click;easing:easeInCubic;dur:150;from: 0.1 0.1 0.1; to: 1 1 1"
+                animation__fusing="property:scale; startEvents:fusing;easing:easeInCubic;dur:1500;from: 1 1 1; to: 0.1 0.1 0.1"
+                animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1"
+                >
+                </a-entity>
+            </a-entity>
+		</a-entity>
 	</a-scene>
     </body>
 </html>

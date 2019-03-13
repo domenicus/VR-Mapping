@@ -8,6 +8,8 @@ AFRAME.registerComponent("gallery", { schema: {
 	toolState: 0, //0=no tool, 1=have tool, 2=is portal
 	activeTool: null,
 	zones: null,
+	currentRoom: null,
+	roomvector: new THREE.Vector3(0, 0, 15),
 	greeting:
 		"Welcome to the Gallery!\n\n"+
 		"You need a controller.\n"+
@@ -34,14 +36,21 @@ AFRAME.registerComponent("gallery", { schema: {
 		// LOAD METADATA
 		var metafile = document.querySelector('a-asset-item[src="' + data.metafile +'"]').data;
 		this.zones = JSON.parse(metafile);
+		var zones = this.zones;
 
 		// REGISTER MAP TOOL LISTENERS
+		function teleportHandler(newroom, e) {
+			console.log("current room index:", self.currentRoom);
+			self.makeRoom(self.currentRoom)[0].setAttribute("position", e.detail.to);
+			self.makeRoom(newroom)[0].setAttribute("position", new THREE.Vector3());
+			self.currentRoom = newroom;
+		}
 		for(var i = 0; i < data.navtools.length; i++) {
 			var tool = data.navtools[i];
 			tool.addEventListener('click', function(e) {
+				console.log("State:", self.zones, self.toolState);
 				console.log("Clicked", e);
 				if(self.toolState == 0) { // Picked up!
-					//tool.setAttribute("src", "temp/out.jpg");
 					var cursor = e.detail.cursorEl;
 					if(cursor.hasAttribute("cursor")) { // Workaround for 2D debug
 						cursor.parentElement.parentElement.appendChild(tool);
@@ -49,9 +58,11 @@ AFRAME.registerComponent("gallery", { schema: {
 						cursor.appendChild(tool);
 					}
 					self.toolState = 1;
+					console.log("Picked up");
 					return;
 				}
-				if(self.zones && self.toolstate == 1) { // Selected a zone!
+				if(self.zones && self.toolState == 1) { // Selected a zone!
+					console.log("Picked region:");
 					var zones = self.zones;
 					var isect = e.detail.intersection.uv;
 					for(var i = 0; i < zones.length; i++) {
@@ -59,14 +70,58 @@ AFRAME.registerComponent("gallery", { schema: {
 						if(coords[0] < isect.x && coords[2] > isect.x &&
 							coords[1] < isect.y && coords[3] > isect.y) {
 							console.log(zones[i].name);
-							//target.setAttribute("src", "temp/flipped."+zones[i].name);
+							var room = self.makeRoom(i);
 							self.toolState = 2; // transition to portal mode
+							// set up portal
+							var portal = document.createElement("a-entity");
+							portal.setAttribute("face-portal", "sphere", tool.id);
+							portal.setAttribute("face-portal", "to", room[1]);
+							tool.appendChild(portal);
+							portal.addEventListener("teleportme", teleportHandler.bind(self, i));
 						}
 					}
 				}
 			});
 		}
-
+		const nexusIndex = zones.map(e => e.isnexus).indexOf(true);
+		self.makeRoom(nexusIndex);
+		self.currentRoom = nexusIndex;
+	},
+	makeRoom: function(zoneIndex) {
+		var self = this;
+		var zones = self.zones;
+		var exists = document.getElementById(self.el.id+"k"+zoneIndex);
+		if(!exists && zones[zoneIndex].isnexus) {
+			exists = document.getElementById("nexus");
+		}
+		if(exists) {
+			console.log("Zone already exists:", exists);
+			pos = exists.getAttribute("position");
+			return [exists, pos];
+		}
+		var rel = document.createElement("a-entity"); // base for room
+		var globe = document.createElement("a-sphere");
+		globe.setAttribute("src", "temp/flipped."+zones[zoneIndex].name);
+		globe.setAttribute("radius", 10);
+		globe.setAttribute("theta-start", 20);
+		globe.setAttribute("theta-length", 120);
+		//theta-start="20" theta-length="120" material="side: back; shader: flat" class="clickable">
+		globe.classList.add("clickable");
+		globe.setAttribute("material", "side", "back");
+		globe.setAttribute("material", "shader", "flat");
+		rel.appendChild(globe);
+		var pos;
+		if(zones[zoneIndex].isnexus) {
+			pos = new Three.Vector3(0, 0, 0);
+			rel.setAttribute("id", "nexus");
+			rel.setAttribute("position", pos);
+		} else {
+			pos = self.roomvector.multiplyScalar(zoneIndex+1);
+			rel.setAttribute("id", self.el.id+"k"+zoneIndex);
+			rel.setAttribute("position", pos);
+		}
+		self.el.sceneEl.appendChild(rel);
+		return [rel, pos];
 	}
 });
 

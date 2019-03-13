@@ -9,7 +9,8 @@
 AFRAME.registerComponent("face-portal", {
 	schema: {
 		to: {type: "vec3"},
-		uuid:{type: 'number', default: -1} // NEVER set this manually.
+		uuid:{type: 'number', default: -1}, // NEVER set this manually.
+		sphere:{type: 'selector', default: null}
 	},
 	camera: null,
 	renderInterval: 500,
@@ -26,12 +27,25 @@ AFRAME.registerComponent("face-portal", {
 		var el = this.el;
 		var data = this.data;
 		var sph;
-		sph = document.createElement("a-entity");
-		sph.setAttribute("material", "side", "back");
-		sph.setAttribute("geometry", "primitive", "sphere");
-		sph.setAttribute("geometry", "radius", 0.4);
-		sph.classList.add("clickable");
-		el.appendChild(sph);
+		if(data.sphere) {
+			sph = data.sphere;
+		} else {
+			console.log("Making own sphere");
+			sph = document.createElement("a-entity");
+			sph.setAttribute("material", "side", "back");
+			sph.setAttribute("geometry", "primitive", "sphere");
+			sph.setAttribute("geometry", "radius", 0.4);
+			sph.classList.add("clickable");
+			el.appendChild(sph);
+			// Set up grab:
+			sph.addEventListener("click", function portalclicked(e) {
+				sph.setAttribute("position", "0 0 0");
+				sph.flushToDOM();
+				console.log(sph);
+				e.detail.cursorEl.appendChild(sph);
+				console.log(sph);
+			});
+		}
 		var camera = document.createElement("a-camera");
 		camera.setAttribute("active", "false");
 		this.camera = camera;
@@ -43,14 +57,6 @@ AFRAME.registerComponent("face-portal", {
 			camera: "#"+camera.id
 		});
 
-		// Set up grab:
-		sph.addEventListener("click", function portalclicked(e) {
-			sph.setAttribute("position", "0 0 0");
-			sph.flushToDOM();
-			console.log(sph);
-			e.detail.cursorEl.appendChild(sph);
-			console.log(sph);
-		});
 
 		console.log("TO: ", data.to);
 		this.sphere = sph;
@@ -73,13 +79,15 @@ AFRAME.registerComponent("face-portal", {
 		if(!sph.parentEl)
 			return;// skip bad pre-loading stages
 		if(sph.object3D.getWorldPosition(elpos).distanceTo(el.sceneEl.camera.getWorldPosition(portpos)) < 0.4 && !self.done) {
+			console.log("CLOSE ENOUGH");
 			self.done = true;
 			var q = new THREE.Quaternion();
 			q = sph.object3D.getWorldQuaternion(q);
 			q.inverse();
-			var evt = new CustomEvent('teleportme', {detail: {quat: q}});
+			var evt = new CustomEvent('teleportme', {detail: {quat: q, to: self.data.to}});
 			el.dispatchEvent(evt);
-			sph.parentEl.removeChild(sph);
+			if(!self.data.sphere)
+				sph.parentEl.removeChild(sph);
 		}
 
 
