@@ -5,7 +5,9 @@ import math
 from PIL import Image
 import PIL
 
-image_names = ["Ovalle-final_012.jpg", "C-6102-highres-cropped.jpg", "02301-6-highres-cropped.jpg", "28546-highres-cropped.jpg", "086058-1-highres-cropped.jpg"];
+#image_names = ["Ovalle-final_012.jpg", "C-6102-highres-cropped.jpg", "02301-6-highres-cropped.jpg", "28546-highres-cropped.jpg", "086058-1-highres-cropped.jpg"];
+# Testing set:
+image_names = ["7962e.jpg", "PIA15482.jpg", "32175.jpg", "14349-000.jpg"];
 images = [];
 
 for name in image_names:

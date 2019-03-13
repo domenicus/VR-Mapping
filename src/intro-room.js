@@ -25,18 +25,6 @@ AFRAME.registerComponent("intro-room", {
 			cam.setAttribute("camera", "active", true);
 		}
 		this.camera = cam;
-		var greeting = document.createElement("p");
-		greeting.innerHTML = (this.greeting);
-		greeting.style.width = "25vw";
-		greeting.style.zIndex = 999;
-		greeting.style.position = "relative";
-		greeting.style.left = "5em";
-		greeting.style.background = "white";
-		greeting.style.padding = "2em";
-
-		setTimeout(function() {
-			document.querySelector('.a-enter-vr').appendChild(greeting);
-		}, 1000);
 
 		var portal = document.createElement("a-entity");
 		this.portal = portal;
