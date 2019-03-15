@@ -159,6 +159,7 @@ AFRAME.registerComponent("gallery", { schema: {
 		globe.classList.add("clickable");
 		globe.setAttribute("material", "side", "back");
 		globe.setAttribute("material", "shader", "flat");
+		// ZOOM AND AUDIO ANNOTATION
 		globe.addEventListener('click', function(e) {
 			if(zones[zoneIndex].zoomed) {
 				globe.object3D.position.copy(zones[zoneIndex].zoomed);
@@ -168,6 +169,28 @@ AFRAME.registerComponent("gallery", { schema: {
 			zones[zoneIndex].zoomed = globe.object3D.position.clone();
 			var s = e.detail.intersection.point.divideScalar(-3/2);
 			globe.object3D.position.add(s);
+			// ANNOTATION
+			if(zones[zoneIndex].meta) {
+				var areas = zones[zoneIndex].meta.list;
+				var isect = e.detail.intersection.uv;
+				for(var i = 0; i < areas.length; i++) {
+					var coords = areas[i];
+					if(coords.x < isect.x && coords.lx > isect.x &&
+						coords.y < isect.y && coords.ly > isect.y) {
+						console.log(coords.filename);
+						if(coords.file) {
+							if(self.playing_id != i) {
+								if(self.playing)this.playing.pause();
+									var aud = new Audio(coords.file);
+									aud.play();
+									self.playing = aud;
+									self.playing_id = i;
+								}
+						}
+						break;
+					}
+				}
+			}
 		});
 		rel.appendChild(globe);
 		var pos;

@@ -7,6 +7,7 @@
  **/
 var voices_mapper = {
     meta: null,
+	image_name: "bad",
     init:
 function voices_mapper_loadimage() {
     var image_upload = document.getElementById("mapperImageUpload");
@@ -23,6 +24,7 @@ function voices_mapper_loadimage() {
             image.onload = function() {outer.main()};
             image_upload_box.style.display = "none";
         }
+		outer.image_name = this.files[0].name;
         reader.readAsDataURL(this.files[0]);
     });
 
@@ -246,6 +248,16 @@ function voices_mapper() {
                 { type:"application/octet-stream" }));
         file_download.setAttribute("download", "data.mapped");
     });
+	// Download just-filenames file
+	var json_download = document.getElementById("mapperJSONDownload");
+	var self = this;
+	json_download.addEventListener("click", function() {
+		console.log("light JSON");
+		json_download.href = URL.createObjectURL(
+            new Blob([JSON.stringify({meta: meta,list:act_list,image:outer.image_name})], 
+                { type:"application/octet-stream" }));
+        json_download.setAttribute("download", self.image_name+".json");
+	});
 }
 };
 window.addEventListener("load", function() {voices_mapper.init();});
