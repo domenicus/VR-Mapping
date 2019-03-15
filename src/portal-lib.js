@@ -10,7 +10,8 @@ AFRAME.registerComponent("face-portal", {
 	schema: {
 		to: {type: "vec3"},
 		uuid:{type: 'number', default: -1}, // NEVER set this manually.
-		sphere:{type: 'selector', default: null}
+		sphere:{type: 'selector', default: null},
+		tex:{type: 'string', default: null}
 	},
 	camera: null,
 	renderInterval: 500,
@@ -36,7 +37,9 @@ AFRAME.registerComponent("face-portal", {
 			sph.setAttribute("geometry", "primitive", "sphere");
 			sph.setAttribute("geometry", "radius", 0.4);
 			sph.classList.add("clickable");
+			console.log(sph, this.el);
 			el.appendChild(sph);
+			console.log(el.childNodes.length);
 			// Set up grab:
 			sph.addEventListener("click", function portalclicked(e) {
 				sph.setAttribute("position", "0 0 0");
@@ -61,6 +64,10 @@ AFRAME.registerComponent("face-portal", {
 		console.log("TO: ", data.to);
 		this.sphere = sph;
 
+		if(this.data.tex) {
+			this.haveRendered = 1;
+			sph.setAttribute("material", "src", this.data.tex);
+		}
 	},
 	tick: function face_portal_tick() {
 		// face-portal intersection code
@@ -78,16 +85,22 @@ AFRAME.registerComponent("face-portal", {
 
 		if(!sph.parentEl)
 			return;// skip bad pre-loading stages
-		if(sph.object3D.getWorldPosition(elpos).distanceTo(el.sceneEl.camera.getWorldPosition(portpos)) < 0.4 && !self.done) {
+		sph.object3D.getWorldPosition(elpos);
+		el.sceneEl.camera.getWorldPosition(portpos);
+		if(portpos.x == 0 && portpos.y == 0 && portpos.z == 0)
+			return;// origin cameras don't exist
+		if(elpos.distanceTo(portpos) < 0.4 && !self.done) {
+			console.log("position", sph.object3D.getWorldPosition(elpos), "camera position", el.sceneEl.camera.getWorldPosition(portpos),
+					"distance", sph.object3D.getWorldPosition(elpos).distanceTo(el.sceneEl.camera.getWorldPosition(portpos)));
 			console.log("CLOSE ENOUGH");
-			self.done = true;
+			//self.done = true;
 			var q = new THREE.Quaternion();
 			q = sph.object3D.getWorldQuaternion(q);
 			q.inverse();
 			var evt = new CustomEvent('teleportme', {detail: {quat: q, to: self.data.to}});
 			el.dispatchEvent(evt);
 			if(!self.data.sphere)
-				sph.parentEl.removeChild(sph);
+				this.el.appendChild(sph);
 		}
 
 

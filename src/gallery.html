@@ -15,12 +15,12 @@
 			<img id="space" src="temp/PIA15482.jpg"></img>
 			<a-asset-item id="metafile" src="temp/out.json"></a-asset-item>
 		</a-assets>
-		<a-entity gallery="metafile: #metafile; mapfile:#mapofmaps; navtools: #mapworld; exhibits: a, b, c;"/>
+		<a-entity gallery="metafile: #metafile; mapfile:#mapofmaps; navtools: #mapworld; exhibits: a, b, c; platform: #platform;"/>
 		</a-entity>
+        <a-entity id="platform" obj-model="obj: url(temp/platform.obj)" rotation="0 180 0" position="0 100 5000" material="shader: standard" scale="0.66 0.66 0.66"></a-entity>
 		<a-entity id="nexus" position="0 0 0">
-			<a-entity obj-model="obj: url(temp/platform.obj)" rotation="0 180 0" position="0 -2 0" material="shader: standard" scale="0.66 0.66 0.66"></a-entity>
 			<a-sphere id="outermap" src="#space" radius="10"
-			theta-start="20" theta-length="120" material="side: back; shader: flat" class="clickable">
+			theta-start="0" theta-length="180" material="side: back; shader: flat" class="clickable">
 			</a-sphere>
 			<!--
 			<a-light color=#faebd7 type="point" distance=20 decay=0 position="-2 5.5 0" intensity="0.5"></a-light>
@@ -28,19 +28,18 @@
 			-->
 		</a-entity>
 
-		<a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .doesntexist; showLine: false">
-			<a-sphere position="0 0 -0.4" id="mapworld" src="#mapofmaps" radius="0.185"
-			theta-start="0" theta-length="180" class="clickable" material="side: back; shader: flat">
-				<a-entity obj-model="obj: url(temp/compass.obj)" scale="0.15, 0.15, 0.15" position="0 -0.15 0"></a-entity>
-			<!--
-			-->
-			</a-sphere>
+        <a-sphere position="0 0 -0.4" id="mapworld" src="#mapofmaps" radius="0.185"
+        theta-start="0" theta-length="180" class="clickable" material="side: back; shader: flat">
+            <a-entity obj-model="obj: url(temp/compass.obj)" scale="0.15, 0.15, 0.15" position="0 -0.15 0"></a-entity>
+            <!--
+            -->
+        </a-sphere>
+		<a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable">
 		</a-entity>
 		<a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #FF8A7E"></a-entity>
-        <a-entity position="0 1.6 0">
+        <a-entity position="0 0 0">
             <a-entity camera="active:true;" look-controls wasd-controls>
                 <!-- FOR DEBUGGING
-                -->
                 <a-entity cursor="fuse: true; fuseTimeout: 1500" position="0 0 -0.1"
                 geometry="primitive: ring; radiusInner: 0.003; radiusOuter: 0.005"
                 material="color: black; shader: flat"
@@ -49,6 +48,7 @@
                 animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1"
                 >
                 </a-entity>
+                -->
             </a-entity>
 		</a-entity>
 	</a-scene>
