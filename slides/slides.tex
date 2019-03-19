@@ -22,8 +22,13 @@
 			\usebeamerfont{date}\insertdate\par
 		\end{column}
 		\begin{column}{.5\textwidth}
-			\movie[label=show3,width=1.0\textwidth,poster,autostart,loop] 
-			 {%Try bad flash player first??
+			\ifx\useflashembed\undefined
+					\immediate\write18{%
+						pdflatex --jobname=\jobname-flash "\gdef\string\useflashembed{0}\space\string\input\space\jobname"%
+					}
+				\movie[label=show3,width=1.0\textwidth,poster,autostart,loop]%
+				{\includegraphics[width=1.0\textwidth]{intro-video.png}}{intro-video.mp4}
+			\else%Try bad flash player first??
 				\includemedia[
 				  width=\textwidth,
 				  height=0.7\textheight,
@@ -38,7 +43,7 @@
 				    &loop=true %
 				  }
 				]{\includegraphics[width=1.0\textwidth]{intro-video.png}}{VPlayer.swf}
-			}{intro-video.mp4}
+			\fi
 		\end{column}
 	\end{columns}
 }
