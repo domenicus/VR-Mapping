@@ -1,0 +1,112 @@
+\documentclass{beamer}
+\usetheme{default}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+\setbeamertemplate{footline}[text line]{%
+	\parbox{\linewidth}{\vspace*{-8pt}Repository: https://github.com/domenicus/VR-Mapping}}
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+
+\begin{frame}{Technical Aspects}
+	\begin{enumerate}
+		\item Software toolchain
+		\item How to make reality convincing
+		\item Example: compass
+		\item Example: voices
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Software toolchain}
+	\begin{enumerate}
+		\item We deliver all content through the browser. All of our code is
+			JavaScript and HTML. 
+		\item We do not have a serverside component; any HTTP
+			server will do (e.g. Apache, Nginx).\\
+		\item To access VR we depend on the WebVR browser API, the
+			Gamepad API, and the A-Frame JavaScript library.
+		\item Firefox controls the headset on our behalf through SteamVR.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Why A-Frame}
+	\begin{columns}[t]
+		\begin{column}{.3\textwidth}
+			\adjincludegraphics[width=.8\linewidth,valign=t]{aframe}
+		\end{column}
+		\begin{column}{.7\textwidth}
+	When we set out, we wanted to ensure we weren't tied to a single headset
+	or a single computer. The easiest way to achieve this is to use a
+	headset-agnostic, OS-agnostic framework like A-Frame.\\
+	A-Frame is completely open source, meaning that we can make our own
+	modified copies and keep and distribute them without issue. This avoids
+	relying on a commercial software licencing agreement for future availability.
+		\end{column}
+	\end{columns}
+\end{frame}
+\begin{frame}{How to make reality convincing}
+	We started with very basic environments, like rooms with flat maps on
+	the wall. We learned a variety of important lessons:
+	\begin{enumerate}
+		\item Sharp transitions are scary, slow transitions are
+			nauseating.
+		\item Turning around is annoying.
+		\item Boring space is bad space.
+	\end{enumerate}
+	\includegraphics[width=\textwidth]{early}
+\end{frame}
+\begin{frame}{Compass}
+	\begin{columns}[t]
+		\begin{column}{.3\textwidth}
+			\adjincludegraphics[width=.8\linewidth,valign=t]{portal}
+			\adjincludegraphics[width=.8\linewidth,valign=t]{portal2}
+		\end{column}
+		\begin{column}{.7\textwidth}
+	\begin{enumerate}
+		\item At first, we just started people in front of a map.
+			This was not exciting.
+		\item So, we added an introductory space, with a 'portal' to get in.
+			We made our 'portal' by putting an image on the 'inside' of a globe,
+			and making the walls transparent from the outside.
+		\item We ultimately transformed the introductory space to the literal vision
+			of space we now have, but the portal had captured out attention as
+			the 'Aleph' from Borges.
+		\item We kept the portal, since it was a good (and philosophically satisfying)
+			transition.
+	\end{enumerate}
+		\end{column}
+	\end{columns}
+\end{frame}
+\begin{frame}{Compass}
+	\begin{columns}[t]
+		\begin{column}{.3\textwidth}
+			\adjincludegraphics[width=.8\linewidth,valign=t]{compass}
+		\end{column}
+		\begin{column}{.7\textwidth}
+	\begin{enumerate}
+		\item To really have an Aleph, we needed to be able to access
+			\textbf{all} the maps, not just one.
+		\item We put all the maps in one little portal, and let the user select which
+			one they want. This was also very convenient!
+		\item We decided to use a motif from one of the maps we studied, a compass.
+		\item We made a 3D model and attached it to the portal, making it feel more physical.
+	\end{enumerate}
+		\end{column}
+	\end{columns}
+\end{frame}
+\begin{frame}{Voices}
+	\begin{enumerate}
+		\item We first experimented with having a box of information on one side of the screen.
+		\item Reading text in VR is both boring and occasionally difficult.
+		\item So, we decided to have voice annotations. 
+		\item We created a flat, non-VR tool to
+			graphically map audio files onto the map.
+		\item We used to play audio whenever the user looked at the right area, but it was
+			annoying.
+		\item We play the audio back when the user zooms in -- giving them context only
+			when they ask for it.
+	\end{enumerate}
+	\includegraphics[width=\linewidth]{voices-mapper}
+\end{frame}
+
+\end{document}
