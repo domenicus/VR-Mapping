@@ -3,6 +3,7 @@
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{multimedia}
+\usepackage{media9}
 \usepackage{adjustbox}
 
 \setbeamertemplate{footline}[text line]{%
@@ -22,7 +23,22 @@
 		\end{column}
 		\begin{column}{.5\textwidth}
 			\movie[label=show3,width=1.0\textwidth,poster,autostart,loop] 
-			 {\includegraphics[width=1.0\textwidth]{intro-video.png}}{intro-video.mp4}
+			 {%Try bad flash player first??
+				\includemedia[
+				  width=\textwidth,
+				  height=0.7\textheight,
+				  activate=pageopen,
+				  addresource=intro-video.mp4,
+				  flashvars={
+				    %important: same path as in `addresource'
+				    source=intro-video.mp4 %
+				    &scaleMode=stretch %
+				    &autoPlay=true %
+				    &autoRewind=true %
+				    &loop=true %
+				  }
+				]{\includegraphics[width=1.0\textwidth]{intro-video.png}}{VPlayer.swf}
+			}{intro-video.mp4}
 		\end{column}
 	\end{columns}
 }
