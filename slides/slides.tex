@@ -2,6 +2,7 @@
 \usetheme{default}
 \usepackage{array}
 \usepackage{graphicx}
+\usepackage{multimedia}
 \usepackage{adjustbox}
 
 \setbeamertemplate{footline}[text line]{%
@@ -10,12 +11,20 @@
 
 \defbeamertemplate*{title page}{customized}[1][]
 {
-	\usebeamerfont{title}\inserttitle\par
-	\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
-	\bigskip
-	\usebeamerfont{author}\insertauthor\par
-	\usebeamerfont{institute}\insertinstitute\par
-	\usebeamerfont{date}\insertdate\par
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\usebeamerfont{title}\inserttitle\par
+			\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+			\bigskip
+			\usebeamerfont{author}\insertauthor\par
+			\usebeamerfont{institute}\insertinstitute\par
+			\usebeamerfont{date}\insertdate\par
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\movie[label=show3,width=1.0\textwidth,poster,autostart,loop] 
+			 {\includegraphics[width=1.0\textwidth]{intro-video.png}}{intro-video.mp4}
+		\end{column}
+	\end{columns}
 }
 
 \title{On Exactitude In Science: Semiotics Of Representations}
