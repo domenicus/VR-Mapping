@@ -1,5 +1,6 @@
 \documentclass{beamer}
 \usetheme{default}
+\usepackage{pdfpages}
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{multimedia}
@@ -58,6 +59,11 @@
 
 \maketitle
 
+{
+	\setbeamercolor{background canvas}{bg=}
+	\includepdf[pages={1-}]{hereford-slides.pdf}
+}
+
 \begin{frame}{On Exactitude in Science, by Jorges Luis Borges}
 	... In that Empire, the Art of Cartography reached such Perfection that the map of a single
 	Province occupied a whole City, and the map of the Empire a whole Province. In the course
@@ -110,7 +116,7 @@
 
 		\item Maps as representations, an objectification of space, produce and project a reality that in western tradition has been accepted as ``reality'' … remember the arrow in a map telling: ``you are here''
 
-		\item Virtual reality as we currently understand it, it’s an immersion experience in a 3D computer generated environment. 
+		\item Virtual reality as we currently understand it, is an immersion experience in a 3D computer generated environment. 
 	\end{enumerate}
 
 	``We accept reality so readily - perhaps because we sense that nothing is real.''\par
