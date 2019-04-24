@@ -96,7 +96,8 @@ AFRAME.registerComponent("gallery", { schema: {
 							self.toolState = 2; // transition to portal mode
 							// set up portal
 							var portal = document.createElement("a-entity");
-							portal.setAttribute("face-portal", "sphere", "#"+tool.id);
+							var sphere = document.querySelector("#"+tool.id+" a-sphere");
+							portal.setAttribute("face-portal", "sphere", sphere);
 							portal.setAttribute("face-portal", "to", room[1]);
 							portal.setAttribute("face-portal", "tex", "temp/flipped."+zones[i].name);
 							tool.appendChild(portal);
