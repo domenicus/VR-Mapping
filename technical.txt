@@ -1,0 +1,50 @@
+We built our application as a website, using the open-source A-Frame library,
+which itself uses the open-source THREE.js library to communicate to the WebVR
+API, which is implemented by FireFox, which then interfaces to the proprietary
+headset APIs. To build out experience, we have a few A-Frame 'components', which
+are A-Frame's module system. Our smallest component is a 'portal', which we use
+to move the user from place to place. It projects a 3D image of the destination
+on the inside of a sphere, and then moves the destination object to the user
+when the user brings the portal within a certain minimum distance of their head.
+Our compass component uses a similar inside-projection sphere, but it instead
+waits for the user to click on part of it, then it uses the coordinates of the
+click in the image that's projected on the inside to determine which map was
+selected. With the selected map, it creates a portal to the appropriate object.
+Each map is assigned an object by the gallery component, which takes a list of
+images and produces the appropriate compass image, objects, and portals. The
+gallery also waits for the user to click on a map object, which it then moves
+closer to the user for better viewing. 'clicking' is handled by the A-Frame
+built-in 'laser-controls' component, which abstracts the actual hardware
+controller button models so that our code can support multiple different
+platforms, like Oculus Go, HTC Vive, and Daydream without having to explicitly
+add a case for every VR device on the market. 
+
+We chose the A-Frame library because of broad headset support, a strong
+community, and ease of redistribution. First, unlike Unity or other C++/native
+toolsets, A-Frame supports nearly all headsets, even phones and phone-like
+headsets like Oculus Go. There is no need to recompile a binary executable or
+worry about finding headers to link against. Second, the A-Frame community (and
+the broader THREE.js community) are active and easy to reach; the A-Frame Slack
+channel in particular is an excellent way to get advice from people who know the
+tools very well. Redistributing code and applications is very important for
+academic work, but this can be hampered by proprietary licensing agreements and
+dependencies on O.S. platforms. By using an open-source project that does not
+require closed-source components to run, we ensure that it's easy for anyone to
+reproduce our work. This is further benefitted by being able to leverage a broad
+category of V.R. hardware, including low-cost phone solutions like Daydream or
+Cardboard.
+
+Making things modular is important to us because we want our code to be
+reusable, so making different subsystems A-Frame into components was a natural
+fit. Each component occupies one file, and so moving them into a new project is
+as easy as importing the respective files. This also makes our code more
+readable, since different systems are naturally grouped into different files.
+Finally, packaging things as separate components also helps us version the code
+in our Git repository; the short log of which files were edited is also an
+indication of which systems were modified. Using a public Git repository on
+Github furthers our goal of making our work reproducible, and helps us maintain
+good code quality. Due to the web-based architecture, our Git repository can be
+used to trivially reproduce the experience by merely copying the src folder to 
+a web server. The decentralized nature of Git also means that if anyone develops
+further work on top of ours, it will be easy to bring it into the same public
+repository.
