@@ -1,0 +1,6 @@
+TITLE 
+Efficiently interfacing with online collections systems
+ABSTRACT
+We interface to the John Carter Brown Library's LUNA database from a web-based
+application to search and import images. These images are then annotated and
+used for a VR presentation environment.
