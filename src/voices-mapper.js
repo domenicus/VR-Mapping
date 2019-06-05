@@ -7,7 +7,7 @@
  **/
 var voices_mapper = {
     meta: null,
-	image_name: "bad",
+    image_name: "bad",
     init:
 function voices_mapper_loadimage() {
     var image_upload = document.getElementById("mapperImageUpload");
@@ -90,6 +90,86 @@ function voices_mapper_loadimage() {
 		    http.send(null);
 	    }
     });
+    // Handle multiDB:
+    var self = this;
+    var dbsearchbar = document.getElementById("mapperDBSearchbar");
+    var restable = document.getElementById("mapperDBResultsTable");
+    dbsearchbar.addEventListener("keyup", function(e) {
+	    if(e.keyCode != 13) {
+		    return;
+	    }
+	    // Clear search results:
+	    while(restable.firstChild) restable.removeChild(restable.firstChild);
+	    var dbswitch = document.getElementById("mapperDBSwitch");
+	    var querystring = encodeURI(dbsearchbar.value);
+	    switch(dbswitch.value) {
+	    case "wdl": 
+		    var req = new XMLHttpRequest();
+		    req.open("GET", "https://www.wdl.org/en/search/?q="+querystring+"&qla=en");
+		    req.onreadystatechange = function() {
+			    if(req.readyState != 4) {
+				    return;
+			    }
+			    if(req.status != 200) {
+				    alert("WDL API failed with error "+req.status);
+			    }
+			    // OK, think we have a good request
+			    // start parsing the WDL search page for what we want:
+			    var searchres = req.responseXML;
+			    var listel = searchres.getElementById("search-results");
+			    listel = listel.children[0];
+			    // iterate over entries:
+			    for(var entry in listel.children) {
+				    entry = listel.children[entry];
+				    if(!entry.querySelector) continue; // ignore spare junk
+				    var title = entry.querySelector("[itemprop=name]")
+					    .innerHTML;
+				    var desc = entry.querySelector("[itemprop=description]")
+					    .innerHTML;
+				    var id = entry.id;
+				    console.log(entry);
+				    var newlinkel = document.createElement("a");
+				    var newtitleel = document.createElement("td");
+				    var newdescel = document.createElement("td");
+				    var newrowel = document.createElement("tr");
+				    newlinkel.href = "";
+				    newlinkel.onclick = self.loadIIIF.bind(self, "wdl", id);
+				    newlinkel.innerHTML = title;
+				    newdescel.innerHTML = desc;
+				    newrowel.appendChild(newtitleel);
+				    newrowel.appendChild(newdescel);
+				    newtitleel.appendChild(newlinkel);
+				    restable.appendChild(newrowel);
+			    }
+		    };
+		    req.responseType = "document";
+		    req.send();
+		    break;
+	    default:
+		    alert("That database is not implemented.");
+	    }
+    });
+},
+    loadIIIF:
+function loadIIIF(endpoint, id, e) {
+	e.preventDefault();
+	var endstring = "/full/full/0/default.jpg";
+	var startstring;
+	switch(endpoint) {
+	case "wdl":
+		startstring = "https://content.wdl.org/iiif/";
+		id += ",1,1"; // temporary: always use first volume and page.
+		break;
+	default:
+		alert("Unimplemented endpoint: "+endpoint);
+	}
+	// bind is great
+	this.image_url = startstring+id+endstring;
+	var image = document.getElementById("mapperImage");
+	image.src = this.image_url;
+	image.onload = this.main.bind(this);
+	var image_upload_box = document.getElementById("mapperImageUploadBox");
+	image_upload_box.style.display = "none";
 },
     main:
 function voices_mapper() {

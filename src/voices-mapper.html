@@ -38,10 +38,16 @@
                 display: inline-block;
                 background: #FFF;
             }
+            table#mapperDBResultsTable span.highlighted {
+                margin: inherit;
+                padding: inherit;
+                background-color: #EC3;
+            }
+
         </style>
     </head>
     <body>
-        <img src="out.png" id="mapperImage" />
+        <img src="" id="mapperImage" />
         <div class="toolbar" >
             <span>
                 Select ID number:
@@ -66,9 +72,17 @@
                 Upload a image of a map:
                 <input id="mapperImageUpload" type="file" accept="image/*" /> <br/>
                 Or seach a LUNA database:
-                <input id="mapperLunaInput", type="text" /> <br/>
+                <input id="mapperLunaInput" type="text" /> <br/>
                 Use Rumsey map collection (otherwise JCB)?
-                <input id="mapperRumseySwitch", type="checkbox" />
+                <input id="mapperRumseySwitch" type="checkbox" />
+                <br/>
+                Search the:
+                <select id="mapperDBSwitch">
+                    <option value="wdl">World Digital Library</option>
+                </select>
+                <input id="mapperDBSearchbar" type="text"/>
+                <table id="mapperDBResultsTable">
+                </table>
             </span>
         </div>
         <canvas id="mapperCanvas" />
