@@ -9,7 +9,7 @@
 		<a-assets>
 			<img id="mapofmaps" src="temp/out.jpg"></img>
 		</a-assets>
-		<a-sphere mapofmaps id="mapworld" class="clickable" src="#mapofmaps" material="side: back" radius="10"
+		<a-sphere mapofmaps="target: #mapworld" id="mapworld" class="clickable" src="#mapofmaps" material="side: back" radius="10"
 			theta-start="20" theta-length="160"></a-sphere>
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .clickable" line="color: #118A7E"></a-entity>
