@@ -28,68 +28,6 @@ function voices_mapper_loadimage() {
         reader.readAsDataURL(this.files[0]);
     });
 
-    // LUNA import:
-    var lsearch = document.getElementById("mapperLunaInput");
-    var rumsey = document.getElementById("mapperRumseySwitch");
-    lsearch.addEventListener("keyup", function(e) {
-	    if(e.keyCode == 13) {
-		    var http = new XMLHttpRequest();
-		    var url;
-		    if(rumsey.checked) {
-			    url = "http://www.davidrumsey.com/luna/servlet/as/fetchMediaSearch";
-		     } else {
-			     url = "https://jcb.lunaimaging.com/luna/servlet/as/fetchMediaSearch";
-		     }
-		    console.log(lsearch.value);
-		    var params = "&sort=Pub_List_No_InitialSort%2CPub_Date%2CPub_List_No%2CSeries_No&lc=RUMSEY%7E8%7E1&fullData=true&bs=25&random=true&os=0";
-		    http.open(rumsey.checked?"GET":"POST", url+'?'+"&q="+lsearch.value+params, true);
-		    http.onreadystatechange = function(e) {
-			    var resp = e.originalTarget.response;
-			    var back;
-			    try {
-				    back = JSON.parse(resp);
-			    } catch(e) {
-				    return;
-			    }
-			    var tab = document.createElement("table");
-			    var hidcan = document.createElement("canvas");
-			    for(var i in back) {
-				    i = back[i];
-				    var el = document.createElement("tr");
-				    var a = document.createElement("td");
-				    var b = document.createElement("td");
-				    var act = document.createElement("a");
-				    //console.log(i);
-				    var attr = JSON.parse(i.attributes);
-				    act.onclick = function(e) {
-					    image_upload_box.style.display = "none";
-					    image.crossOrigin = "Anonymous";
-					    image.src = "https://cors-anywhere.herokuapp.com/"+i.urlSize4.replace("https", "http"); // CORS
-					    image_upload_box.appendChild(hidcan);
-					    image.onload = function() {
-						outer.main()
-						hidcan.width = image.naturalWidth;
-						hidcan.height = image.naturalHeight;
-						hidcan.getContext('2d').drawImage(image, 0, 0);
-						outer.image_url = hidcan.toDataURL('image/png');
-						console.log(outer.image_url);
-					    };
-					    outer.meta = attr;
-				    };
-				    act.style.color = "blue";
-				    act.innerHTML = i.displayName;
-				    b.innerHTML = attr.pub_note;
-				    a.appendChild(act);
-				    el.appendChild(a);
-				    el.appendChild(b);
-				    tab.appendChild(el);
-			    }
-			    image_upload_box.appendChild(tab);
-
-		    };
-		    http.send(null);
-	    }
-    });
     // Handle multiDB:
     var self = this;
     var dbsearchbar = document.getElementById("mapperDBSearchbar");
@@ -106,10 +44,75 @@ function voices_mapper_loadimage() {
 	    case "wdl": 
 		    self.handleWDL(restable, querystring);
 		    break;
+	    case "rumsey":
+		    self.handleLUNA(restable, querystring, true);
+		    break;
+	    case "jcb":
+		    self.handleLUNA(restable, querystring, false);
+		    break;
 	    default:
 		    alert("That database is not implemented.");
 	    }
     });
+},
+    // LUNA import:
+handleLUNA:
+function handleLUNA(restable, querystring, isrumsey) {
+    var outer = this;
+    var image_upload_box = document.getElementById("mapperImageUploadBox");
+    var image = document.getElementById("mapperImage");
+    var http = new XMLHttpRequest();
+    var url;
+    if(isrumsey) {
+	    url = "http://www.davidrumsey.com/luna/servlet/as/fetchMediaSearch";
+    } else {
+	    url = "https://jcb.lunaimaging.com/luna/servlet/as/fetchMediaSearch";
+    }
+    var params = "&sort=Pub_List_No_InitialSort%2CPub_Date%2CPub_List_No%2CSeries_No&lc=RUMSEY%7E8%7E1&fullData=true&bs=25&random=true&os=0";
+    http.open(isrumsey?"GET":"POST", url+'?'+"&q="+querystring+params, true);
+    http.onreadystatechange = function(e) {
+	    var resp = http.response;
+	    var back;
+	    try {
+		    back = JSON.parse(resp);
+	    } catch(e) {
+		    return;
+	    }
+	    var tab = restable;
+	    var hidcan = document.createElement("canvas");
+	    for(var i in back) {
+		    i = back[i];
+		    var el = document.createElement("tr");
+		    var a = document.createElement("td");
+		    var b = document.createElement("td");
+		    var act = document.createElement("a");
+		    //console.log(i);
+		    var attr = JSON.parse(i.attributes);
+		    act.onclick = function(e) {
+			    image_upload_box.style.display = "none";
+			    image.crossOrigin = "Anonymous";
+			    image.src = "https://cors-anywhere.herokuapp.com/"+i.urlSize4.replace("https", "http"); // CORS
+			    image_upload_box.appendChild(hidcan);
+			    image.onload = function() {
+				outer.main()
+				hidcan.width = image.naturalWidth;
+				hidcan.height = image.naturalHeight;
+				hidcan.getContext('2d').drawImage(image, 0, 0);
+				outer.image_url = hidcan.toDataURL('image/png');
+				console.log(outer.image_url);
+			    };
+			    outer.meta = attr;
+		    };
+		    act.style.color = "blue";
+		    act.innerHTML = i.displayName;
+		    b.innerHTML = attr.pub_note;
+		    a.appendChild(act);
+		    el.appendChild(a);
+		    el.appendChild(b);
+		    tab.appendChild(el);
+	    }
+    };
+    http.send(null);
 },
     handleWDL:
 function handleWDL(restable, querystring, page) {

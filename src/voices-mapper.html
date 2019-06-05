@@ -74,16 +74,16 @@
             <span>
                 Upload a image of a map:
                 <input id="mapperImageUpload" type="file" accept="image/*" /> <br/>
-                Or seach a LUNA database:
-                <input id="mapperLunaInput" type="text" /> <br/>
-                Use Rumsey map collection (otherwise JCB)?
-                <input id="mapperRumseySwitch" type="checkbox" />
-                <br/>
-                Search the:
+                Or search one from the:
                 <select id="mapperDBSwitch">
                     <option value="wdl">World Digital Library</option>
+                    <option value="jcb">John Carter Brown Library</option>
+                    <option value="rumsey">Rumsey Map Collection</option>
                 </select>
                 <input id="mapperDBSearchbar" type="text"/>
+                <input type="button" onclick="
+                                     var ke=new KeyboardEvent('keyup', {keyCode: 13});
+                                     document.getElementById('mapperDBSearchbar').dispatchEvent(ke);" value='>'></button>
                 <table id="mapperDBResultsTable">
                 </table>
             </span>
