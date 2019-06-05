@@ -104,51 +104,76 @@ function voices_mapper_loadimage() {
 	    var querystring = encodeURI(dbsearchbar.value);
 	    switch(dbswitch.value) {
 	    case "wdl": 
-		    var req = new XMLHttpRequest();
-		    req.open("GET", "https://www.wdl.org/en/search/?q="+querystring+"&qla=en");
-		    req.onreadystatechange = function() {
-			    if(req.readyState != 4) {
-				    return;
-			    }
-			    if(req.status != 200) {
-				    alert("WDL API failed with error "+req.status);
-			    }
-			    // OK, think we have a good request
-			    // start parsing the WDL search page for what we want:
-			    var searchres = req.responseXML;
-			    var listel = searchres.getElementById("search-results");
-			    listel = listel.children[0];
-			    // iterate over entries:
-			    for(var entry in listel.children) {
-				    entry = listel.children[entry];
-				    if(!entry.querySelector) continue; // ignore spare junk
-				    var title = entry.querySelector("[itemprop=name]")
-					    .innerHTML;
-				    var desc = entry.querySelector("[itemprop=description]")
-					    .innerHTML;
-				    var id = entry.id;
-				    console.log(entry);
-				    var newlinkel = document.createElement("a");
-				    var newtitleel = document.createElement("td");
-				    var newdescel = document.createElement("td");
-				    var newrowel = document.createElement("tr");
-				    newlinkel.href = "";
-				    newlinkel.onclick = self.loadIIIF.bind(self, "wdl", id);
-				    newlinkel.innerHTML = title;
-				    newdescel.innerHTML = desc;
-				    newrowel.appendChild(newtitleel);
-				    newrowel.appendChild(newdescel);
-				    newtitleel.appendChild(newlinkel);
-				    restable.appendChild(newrowel);
-			    }
-		    };
-		    req.responseType = "document";
-		    req.send();
+		    self.handleWDL(restable, querystring);
 		    break;
 	    default:
 		    alert("That database is not implemented.");
 	    }
     });
+},
+    handleWDL:
+function handleWDL(restable, querystring, page) {
+    var self = this;
+    if(!page) page = 1;
+    var req = new XMLHttpRequest();
+    if(page > 1) {
+	    var query = "https://www.wdl.org/en/search/?q="+querystring+"&qla=en&page="+page;
+	    req.open("GET", "https://cors-anywhere.herokuapp.com/"+query.replace("https", "http"));
+	    req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    } else {
+	    req.open("GET", "https://www.wdl.org/en/search/?q="+querystring+"&qla=en");
+    }
+    req.onreadystatechange = function() {
+	    if(req.readyState != 4) {
+		    return;
+	    }
+	    if(req.status != 200) {
+		    alert("WDL API failed with error "+req.status);
+	    }
+	    // OK, think we have a good request
+	    // start parsing the WDL search page for what we want:
+	    var searchres = req.responseXML;
+	    var listel = searchres.getElementById("search-results");
+	    listel = listel.children[0];
+	    // iterate over entries:
+	    for(var entry in listel.children) {
+		    entry = listel.children[entry];
+		    if(!entry.querySelector) continue; // ignore spare junk
+		    var title = entry.querySelector("[itemprop=name]")
+			    .innerHTML;
+		    var desc = entry.querySelector("[itemprop=description]")
+			    .innerHTML;
+		    var id = entry.id;
+		    console.log(entry);
+		    var newlinkel = document.createElement("a");
+		    var newtitleel = document.createElement("td");
+		    var newdescel = document.createElement("td");
+		    var newrowel = document.createElement("tr");
+		    newlinkel.href = "";
+		    newlinkel.onclick = self.loadIIIF.bind(self, "wdl", id);
+		    newlinkel.innerHTML = title;
+		    newdescel.innerHTML = desc;
+		    newrowel.appendChild(newtitleel);
+		    newrowel.appendChild(newdescel);
+		    newtitleel.appendChild(newlinkel);
+		    restable.appendChild(newrowel);
+	    }
+	    var nextrow = document.createElement("tr");
+	    var nextcel = document.createElement("td");
+	    var nextlink = document.createElement("a");
+	    nextlink.href="-";
+	    nextlink.innerHTML = "Load More"
+	    nextlink.onclick = function(e) {
+		    e.preventDefault();
+		    restable.removeChild(nextrow);
+		    self.handleWDL(restable, querystring, page+1);
+	    };
+	    nextrow.appendChild(nextcel);
+	    nextcel.appendChild(nextlink);
+	    restable.appendChild(nextrow);
+    };
+    req.responseType = "document";
+    req.send();
 },
     loadIIIF:
 function loadIIIF(endpoint, id, e) {
